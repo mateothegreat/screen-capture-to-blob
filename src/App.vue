@@ -1,11 +1,11 @@
-<script lang="ts">
+<script lang='ts'>
 import { defineComponent } from 'vue';
 
-export default defineComponent( {
+export default defineComponent({
     data() {
         return {
             events: [] as string[]
-        }
+        };
     },
     methods: {
         addEvent(e: string) {
@@ -18,7 +18,7 @@ export default defineComponent( {
             };
 
             const handle = (devices: MediaStream[]) => {
-                this.addEvent(`${new Date()}: Acquiring media devices`);
+                this.addEvent(`${ new Date() }: Acquiring media devices`);
 
                 const acquired = devices.map(device => {
                     const track = device.getVideoTracks()[0];
@@ -43,12 +43,12 @@ export default defineComponent( {
                     };
                 });
 
-                this.addEvent(`${new Date()}: Tracks acquired successfuly: ${acquired.length}/${devices.length}`);
+                this.addEvent(`${ new Date() }: Tracks acquired successfuly: ${ acquired.length }/${ devices.length }`);
 
                 const screen = getAcquiredTrack(acquired, 'screen');
                 const camera = getAcquiredTrack(acquired, 'camera');
 
-                const stream = new MediaStream([screen.track, camera.track]);
+                const stream = new MediaStream([ screen.track, camera.track ]);
                 const chunks = [];
 
                 const recorder = new MediaRecorder(stream);
@@ -58,11 +58,11 @@ export default defineComponent( {
                     stats.bytes += e.data.size;
                     (this.$refs.bytes as HTMLElement).innerHTML = stats.bytes.toString();
 
-                    console.log(e.data, `${chunks.length} saved frames`);
+                    console.log(e.data, `${ chunks.length } saved frames`);
                 };
 
                 recorder.onstop = e => {
-                    this.addEvent(`${new Date()}: Stopping..`);
+                    this.addEvent(`${ new Date() }: Stopping..`);
 
                     // const blob = new Blob(chunks);
                     // const url = URL.createObjectURL(blob);
@@ -72,13 +72,13 @@ export default defineComponent( {
                     // c.src = url;
                     // c.play();
 
-                    this.addEvent(`${new Date()}: Final Blob object created containing ${chunks.length} frames`);
+                    this.addEvent(`${ new Date() }: Final Blob object created containing ${ chunks.length } frames`);
 
                     stop(recorder.stream);
                 };
 
                 recorder.onstart = () => {
-                    this.addEvent(`${new Date()}: Start event triggered by MediaRecorder!`);
+                    this.addEvent(`${ new Date() }: Start event triggered by MediaRecorder!`);
                 };
 
                 recorder.start(30);
@@ -92,12 +92,11 @@ export default defineComponent( {
                 setTimeout(() => recorder.stop(), 5000);
             };
 
-            const getAcquiredTrack = (acquired, type) => {
-                const track = acquired.find(track => track.info.device.type === type);
-                return track;
+            const getAcquiredTrack = (acquired: any, type: string) => {
+                return acquired.find((track: any) => track.info.device.type === type);
             };
 
-            const stop = stream => {
+            const stop = (stream: MediaStream) => {
                 stream.getTracks().forEach(track => track.stop());
             };
 
@@ -120,13 +119,15 @@ export default defineComponent( {
 </script>
 
 <template>
-    <button @click="capture">Start recording..</button>
+    <button @click='capture'>Start recording..</button>
 
-    <div>Total bytes processed: <span ref="bytes"></span></div>
+    <div>Total bytes processed: <span ref='bytes'></span></div>
     <div>
         <h4>Events</h4>
         <ul>
-            <li v-for="event in events" ref="events">{{ event }}</li>
+            <li v-for='event in events'
+                ref='events'>{{ event }}
+            </li>
         </ul>
     </div>
 </template>
