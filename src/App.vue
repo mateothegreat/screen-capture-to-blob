@@ -1,23 +1,23 @@
 <script lang="ts">
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent( {
     data() {
         return {
-            events: []
+            events: [] as string[]
         }
     },
     methods: {
-        addEvent(e) {
+        addEvent(e: string) {
             this.events.push(e);
         },
         capture() {
-            const start = Date.now();
-            const events = [];
             const stats = {
                 type: null,
                 bytes: 0
             };
 
-            const handle = devices => {
+            const handle = (devices: MediaStream[]) => {
                 this.addEvent(`${new Date()}: Acquiring media devices`);
 
                 const acquired = devices.map(device => {
@@ -33,11 +33,11 @@ export default {
                                 kind: track.kind,
                                 label: track.label,
                                 state: track.readyState,
-                                fps: capabilities.frameRate.max
+                                fps: capabilities.frameRate!.max
                             },
                             dimensions: {
-                                width: capabilities.width.max,
-                                height: capabilities.height.max
+                                width: capabilities.width!.max,
+                                height: capabilities.height!.max
                             }
                         }
                     };
@@ -56,7 +56,7 @@ export default {
                 recorder.ondataavailable = e => {
                     chunks.push(e.data);
                     stats.bytes += e.data.size;
-                    this.$refs.bytes.innerHTML = stats.bytes;
+                    (this.$refs.bytes as HTMLElement).innerHTML = stats.bytes.toString();
 
                     console.log(e.data, `${chunks.length} saved frames`);
                 };
@@ -116,7 +116,7 @@ export default {
     mounted() {
 
     }
-};
+});
 </script>
 
 <template>
