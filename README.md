@@ -1,3 +1,4 @@
+![](docs/screenshot.png)
 ```bash
 npm install
 ```
